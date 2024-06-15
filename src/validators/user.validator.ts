@@ -1,9 +1,11 @@
 import { IsString, IsInt, IsNotEmpty, IsArray } from 'class-validator';
 import { IntAddress, CreateAddressDTO } from './address.validator';
+import { UUID } from 'crypto';
 // readonly is used fore immutanibility that couldn't modify after initialization
 
 export interface IntUser {
   // interface is validation for internal source, which mean will be validate data or response each method or functio
+  readonly id?: UUID;
   readonly firstName: String;
   readonly lastName: String;
   readonly role: String;

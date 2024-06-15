@@ -27,9 +27,10 @@ export class AuthController {
           password,
           foundUser.password,
         );
+
         if (isValidPassword) {
           const payload = {
-            // id: foundUser.id,
+            id: foundUser.id,
             firstName: foundUser.firstName,
             lastName: foundUser.lastName,
             phoneNumber: foundUser.phoneNumber,
