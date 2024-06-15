@@ -11,7 +11,6 @@ import {
 import { UserService } from '../user/user.service';
 import { NextFunction, Response } from 'express';
 import { IntUser, CreateUserDTO } from 'src/validators/user.validator';
-import { IntAddress } from 'src/validators/address.validator';
 
 @Controller('user')
 export class UserController {
@@ -39,10 +38,11 @@ export class UserController {
     @Next() next: NextFunction,
   ) {
     try {
-      console.log(UserDTO);
-      // { user: IntUser; address: IntAddress[] }
-      const result: { user: IntUser; address: IntAddress[] } =
-        await this.userService.create(UserDTO);
+      const data: IntUser = {
+        ...UserDTO,
+        isActive: false,
+      };
+      const result: IntUser = await this.userService.create(data);
       return res.status(HttpStatus.OK).json({
         status: HttpStatus.OK,
         message: 'Request Success',

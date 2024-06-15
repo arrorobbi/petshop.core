@@ -1,0 +1,29 @@
+[
+  {
+    "firstName": "doc",
+    "lastName": "doc",
+    "role": "doctor",
+    "email": "doc@gmail.com",
+    "password": "secret123",
+    "phoneNumber": "docacc",
+    "isActive": true
+  },
+  {
+    "firstName": "admin",
+    "lastName": "admin",
+    "role": "admin",
+    "email": "admin@gmail.com",
+    "password": "secret123",
+    "phoneNumber": "adminacc",
+    "isActive": true
+  },
+  {
+    "firstName": "owner",
+    "lastName": "owner",
+    "role": "owner",
+    "email": "owner@gmail.com",
+    "password": "secret123",
+    "phoneNumber": "owneracc",
+    "isActive": true
+  }
+]

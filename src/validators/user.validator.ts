@@ -47,3 +47,13 @@ export class CreateUserDTO {
   @IsArray()
   readonly address: CreateAddressDTO;
 }
+
+export class LoginDTO {
+  @IsNotEmpty()
+  @IsString()
+  readonly phoneNumber: String;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly password: String;
+}

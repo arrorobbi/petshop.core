@@ -7,13 +7,14 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { sequelizeConfig } from './sequelize.config';
 import { User } from './models/user';
 import { Address } from './models/address';
+import { AuthController } from './auth/auth.controller';
 
 @Module({
   imports: [
     SequelizeModule.forRoot(sequelizeConfig), //use sequelize config
     SequelizeModule.forFeature([User, Address]),
   ],
-  controllers: [AppController, UserController],
+  controllers: [AppController, UserController, AuthController],
   providers: [AppService, UserService],
 })
 export class AppModule {}

@@ -9,6 +9,6 @@ export class BcryptService {
   }
 
   static async bcrypthash(password: String): Promise<String> {
-    return bcrypt.hash(password, process.env.SALT_ROUNDS);
+    return bcrypt.hash(password, +process.env.SALT_ROUNDS);
   }
 }
