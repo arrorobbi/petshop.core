@@ -15,11 +15,15 @@ export class UserService {
   ) {}
 
   async index(): Promise<{ rows: IntUser[]; count: Number }> {
-    return this.UserModel.findAndCountAll({ include: [{ model: Address }] });
+    return await this.UserModel.findAndCountAll({
+      include: [{ model: Address }],
+    });
   }
 
   async findOne(phoneNumber: String): Promise<IntUser> {
-    return this.UserModel.findOne({ where: { phoneNumber: phoneNumber } });
+    return await this.UserModel.findOne({
+      where: { phoneNumber: phoneNumber },
+    });
   }
 
   async create(data: { address: CreateAddressDTO }): Promise<IntUser> {
