@@ -49,6 +49,7 @@ export class PatientService {
 
     return await updatePatient.reload();
   }
+
   async destroy(patientId: UUID): Promise<Number> {
     return this.PatientModel.destroy({ where: { id: patientId } });
   }

@@ -17,7 +17,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "db:undo": "npx sequelize db:migrate:undo:all",
+    "db:migrate": "npx sequelize db:migrate",
+    "db:seed": "npx sequelize db:seed:all"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -32,6 +35,7 @@
     "dotenv": "^16.4.5",
     "jsbarcode": "^3.11.6",
     "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
     "morgan": "^1.10.0",
     "nodemailer": "^6.9.13",
     "pdf2json": "^3.1.3",

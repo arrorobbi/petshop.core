@@ -1,16 +1,24 @@
-import { IsDate, IsNotEmpty, IsUUID, IsEnum } from 'class-validator';
+import { IsDate, IsNotEmpty, IsUUID, IsEnum, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
 import { UUID } from 'crypto';
 import { ProposeEnum } from '../../config/enum/propose.enum';
+import { IntUser } from './user.validator';
+import { IntPatient } from './patient.validator';
 
 // readonly is used fore immutanibility that couldn't modify after initialization
 
 export interface IntBooking {
   // interface is validation for internal source, which mean will be validate data or response each method or functio
-  readonly id?: UUID;
+  readonly id?: String;
   readonly doctorId: UUID;
   readonly patientId: UUID;
-  readonly dateIn: Date;
-  readonly propose: ProposeEnum;
+  readonly date: Date;
+  readonly queueNumber: Number;
+  readonly propose: String;
+  readonly isScanned: Boolean;
+  readonly isDone: Boolean;
+  readonly doctor?: IntUser;
+  readonly patient?: IntPatient;
 }
 
 export class CreateBookingDTO {
@@ -25,7 +33,8 @@ export class CreateBookingDTO {
 
   @IsNotEmpty()
   @IsDate()
-  readonly dateIn: Date;
+  @Type(() => Date)
+  readonly date: Date;
 
   @IsNotEmpty()
   @IsEnum(ProposeEnum)

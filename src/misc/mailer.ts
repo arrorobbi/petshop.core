@@ -1,77 +1,112 @@
-require('dotenv').config();
 const nodemailer = require('nodemailer');
-const fs = require('fs');
-const BookingService = require('../services/booking.service');
+import * as nodemailer from 'nodemailer';
+import { Injectable } from '@nestjs/common';
+import { BookingService } from 'src/booking/booking.service';
+import { BadRequestError } from 'src/errors';
 
 // const bookingTemplate = fs.readFileSync("mailer/booking.html");
 // config nodemailer
-const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.NODEMAILER_EMAIL,
-    pass: process.env.NODEMAILER_PASS,
-    // user: NODEMAILER_EMAIL,
-    // pass: "qiyr qwkv biwn sgzf",
-  },
-});
 
-export class sendEmail {
-  constructor(payload) {
-    payload = payload;
+// export class MailService {
+//   constructor(private readonly bookingService: BookingService) {}
+
+//   async booking(
+//     payload: string,
+//     bookingId: string,
+//     userEmail: string,
+//     doctorName: string,
+//     userName: string,
+//   ) {
+//     try {
+//       const dataBooking = await this.bookingService.getById(bookingId);
+//       const info = await transporter.sendMail({
+//         from: 'vickyrobbi@gmail.com',
+//         to: userEmail,
+//         subject: 'Your Booking ID',
+//         html: `
+//           <p><strong>Hello ${userName}</strong> <br>Here is your Booking ID on
+//           ${dataBooking.date
+//             .toLocaleDateString('en-US', {
+//               weekday: 'short',
+//               year: 'numeric',
+//               month: 'short',
+//               day: '2-digit',
+//             })
+//             .replace(
+//               ',',
+//               '',
+//             )} and queue ${dataBooking.queueNumber} with doctor ${doctorName} :  <br></p>
+//           ${bookingId}
+//           <p>Barcode is generated in attachment and show the barcode to staff on site</p>
+//         `,
+//         attachments: [
+//           {
+//             filename: `${bookingId}.png`,
+//             path: payload,
+//           },
+//         ],
+//       });
+//     } catch (error) {
+//       throw new BadRequestError(error);
+//     }
+//   }
+// }
+@Injectable()
+export class MailService {
+  private transporter: any;
+  constructor(private readonly bookingService: BookingService) {
+    this.transporter = nodemailer.createTransport({
+      service: 'Gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.NODEMAILER_EMAIL,
+        pass: process.env.NODEMAILER_PASS,
+        // user: NODEMAILER_EMAIL,
+        // pass: "qiyr qwkv biwn sgzf",
+      },
+    });
   }
-  // booking mailer
-  booking = async (
+
+  async bookingMail(
     payload: string,
     bookingId: string,
     userEmail: string,
     doctorName: string,
     userName: string,
-  ) => {
+  ) {
     try {
-      // get detail  booking
-      const dataBooking = await BookingService.getOne(bookingId);
-
-      const info = await transporter.sendMail({
-        from: 'vickyrobbi@gmail.com', // sender address
-        to: userEmail, // list of receivers
-        subject: 'Your Booking ID', // Subject line
-        html:
-          `<p><strong>Hello ${userName}</strong> <br>Here your Booking ID on
-          ${dataBooking.dataValues.date
+      const dataBooking = await this.bookingService.getById(bookingId);
+      const info = await this.transporter.sendMail({
+        from: 'vickyrobbi@gmail.com',
+        to: userEmail,
+        subject: 'Your Booking ID',
+        html: `
+          <p><strong>Hello ${userName}</strong> <br>Here is your Booking ID on
+          ${dataBooking.date
             .toLocaleDateString('en-US', {
               weekday: 'short',
               year: 'numeric',
               month: 'short',
               day: '2-digit',
             })
-            .replace(',', '')} and queue ${
-            dataBooking.dataValues.queueNumber
-          } with doctor ${doctorName} :  <br></p>` +
-          bookingId +
-          '<p>Barcode is generated in attachment and show the barcode to staff on site',
+            .replace(
+              ',',
+              '',
+            )} and queue ${dataBooking.queueNumber} with doctor ${doctorName} :  <br></p>
+          ${bookingId}
+          <p>Barcode is generated in attachment and show the barcode to staff on site</p>
+        `,
         attachments: [
           {
             filename: `${bookingId}.png`,
-            path: payload, // Path to the file you want to attach
+            path: payload,
           },
         ],
       });
     } catch (error) {
-      console.log(error);
+      throw new BadRequestError(error);
     }
-  };
-  // verify mailer
-  // verify = async (payload) =>{
-  //     let accountName = user.firstName
-  //     let linkVerify = "http://128.199.246.107:3005/api/v1.0/verify/"+user.id
-  //     const info = await transporter.sendMail({
-  //         from: "ardecandra@gmail.com", // sender address
-  //         to: user.email, // list of receivers
-  //         subject: "Verify Your Account", // Subject line
-  //         html: "<p><strong>Hello "+accountName+"</strong> <br>You registered an account on Binar Platinum, before being able to use your account you need to verify that this is your email address by clicking here: <br></p><a href="+linkVerify+">Click Here to Confirm Your Account</a><p>Kind Regards</p>"
-  //       });
-  // }
+  }
 }

@@ -1,7 +1,9 @@
-import fs from 'fs';
-import barcode from 'jsbarcode';
+import * as fs from 'fs';
+import * as barcode from 'jsbarcode';
 import { createCanvas } from 'canvas';
-import { sendEmail } from './mailer';
+import { MailService } from './mailer';
+import { Injectable } from '@nestjs/common';
+
 // require('dotenv').config();
 
 // const generateBarcode = async (payload, emailUser, doctorName, userName) => {
@@ -17,7 +19,7 @@ import { sendEmail } from './mailer';
 
 //   // Convert canvas to PNG buffer
 //   const buffer = canvas.toBuffer('image/png');
-//   const filename = './public/barcodes/' + `${payload}.png`;
+//   const filename = '../public/barcodes' + `${payload}.png`;
 //   // Save buffer to a PNG file
 //   fs.writeFile(filename, buffer, (err) => {
 //     if (err) {
@@ -35,9 +37,10 @@ import { sendEmail } from './mailer';
 // };
 
 // module.exports = { generateBarcode };
-
-export class Generate {
-  static async Barcode(
+@Injectable()
+export class GenerateService {
+  constructor(private readonly mailService: MailService) {}
+  async Barcode(
     payload: string,
     emailUser: string,
     doctorName: string,
@@ -55,7 +58,7 @@ export class Generate {
 
     // Convert canvas to PNG buffer
     const buffer = canvas.toBuffer('image/png');
-    const filename = './public/barcodes/' + `${payload}.png`;
+    const filename = 'src/public/barcodes/' + `${payload}.png`;
     // Save buffer to a PNG file
     fs.writeFile(filename, buffer, (err) => {
       if (err) {
@@ -65,9 +68,15 @@ export class Generate {
       console.log('Barcode image saved successfully as barcode-image.png');
     });
 
+    await this.mailService.bookingMail(
+      filename,
+      payload,
+      emailUser,
+      doctorName,
+      userName,
+    );
+
     // sending barcode and dependancies information via email
-    const mailing = new sendEmail(payload);
-    await mailing.booking(filename, payload, emailUser, doctorName, userName);
 
     return filename;
   }

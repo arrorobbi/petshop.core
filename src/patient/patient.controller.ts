@@ -24,7 +24,7 @@ import {
   UnauthorizedError,
 } from 'src/errors';
 import { UUID } from 'crypto';
-import { Patient } from 'src/models/patient';
+import { Patient } from 'src/models';
 
 @Controller('patient')
 export class PatientController {

@@ -1,5 +1,14 @@
 import { UUID } from 'crypto';
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
+import { User } from './user';
+import { Patient } from './patient';
 
 @Table
 export class Booking extends Model {
@@ -10,17 +19,28 @@ export class Booking extends Model {
   })
   id: UUID;
 
+  @ForeignKey(() => User)
   @Column({ type: DataType.UUIDV4 })
   doctorId: UUID;
 
+  @BelongsTo(() => User)
+  doctor: User;
+
+  @ForeignKey(() => Patient)
   @Column({ type: DataType.UUIDV4 })
   patientId: UUID;
+
+  @BelongsTo(() => Patient)
+  patient: Patient;
 
   @Column({ type: DataType.DATE })
   date: Date;
 
+  @Column({ type: DataType.NUMBER })
+  queueNumber: Number;
+
   @Column({ type: DataType.STRING })
-  prpopose: String;
+  propose: String;
 
   @Column({ type: DataType.BOOLEAN })
   isScanned: Boolean;
