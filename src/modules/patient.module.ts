@@ -18,6 +18,7 @@ export class PatientModule {
       .apply(JwtGuard)
       .forRoutes(
         { path: 'patient', method: RequestMethod.POST },
+        { path: 'patient', method: RequestMethod.GET },
         { path: 'patient/owner', method: RequestMethod.GET },
         { path: 'patient/:petName', method: RequestMethod.GET },
         { path: 'patient/:patientId', method: RequestMethod.PATCH },

@@ -8,6 +8,7 @@ import {
   Body,
   Req,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import * as fs from 'fs';
 import { NextFunction, Response, Request } from 'express';
@@ -21,6 +22,9 @@ import { GenerateService } from 'src/misc/barcode_generator';
 import { UUID } from 'crypto';
 import { Booking } from 'src/models';
 import { Sequelize } from 'sequelize-typescript';
+import { UserRole } from 'config/enum/role.enum';
+import { Role } from 'config/decorators/roles.decorator';
+import { RoleGuard } from 'src/middlewares/role-guard';
 
 @Controller('booking')
 export class BookingController {
@@ -33,6 +37,8 @@ export class BookingController {
   ) {}
 
   @Get()
+  @Role(UserRole.doctor)
+  @UseGuards(RoleGuard)
   async index(@Res() res: Response, @Next() next: NextFunction) {
     try {
       const result: { rows: IntBooking[]; count: Number } =
@@ -49,6 +55,8 @@ export class BookingController {
   }
 
   @Post() // issue on transaction cause not created but need lookup bookingId on send email
+  @Role(UserRole.owner)
+  @UseGuards(RoleGuard)
   async create(
     @Body() BookingDTO: CreateBookingDTO,
     @Req() req: Request,
@@ -109,6 +117,8 @@ export class BookingController {
   }
 
   @Get(':bookingId/:status')
+  @Role(UserRole.admin)
+  @UseGuards(RoleGuard)
   async statusBooking(
     @Param('bookingId') bookingId: UUID,
     @Param('status') status: String,

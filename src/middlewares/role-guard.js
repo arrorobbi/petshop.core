@@ -14,12 +14,18 @@ export class RoleGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    console.log(user);
 
     let valid: boolean = false;
-    roles.map((value) =>
-      user.role === UserRole[value] ? (valid = true) : valid,
-    );
-    return valid;
+
+    Object.entries(UserRole).forEach(([key, value]) => {
+      console.log(`${key}: ${value}`);
+      if (value === roles[0]) {
+        // Check if user has any of the required roles
+        roles[0] === user.role ? (valid = true) : valid;
+      }
+      console.log(valid);
+
+      return valid;
+    });
   }
 }

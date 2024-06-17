@@ -10,6 +10,8 @@ import {
   Param,
   Patch,
   Delete,
+  ExecutionContext,
+  UseGuards,
 } from '@nestjs/common';
 import {
   IntPatient,
@@ -25,12 +27,17 @@ import {
 } from 'src/errors';
 import { UUID } from 'crypto';
 import { Patient } from 'src/models';
+import { RoleGuard } from 'src/middlewares/role-guard';
+import { Role } from 'config/decorators/roles.decorator';
+import { UserRole } from 'config/enum/role.enum';
 
 @Controller('patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
   @Get()
+  @Role(UserRole.doctor)
+  @UseGuards(RoleGuard)
   async index(@Res() res: Response, @Next() next: NextFunction) {
     try {
       const result: { rows: IntPatient[]; count: Number } =
@@ -46,6 +53,8 @@ export class PatientController {
   }
 
   @Get('owner')
+  @Role(UserRole.owner)
+  @UseGuards(RoleGuard)
   async getByOwner(
     @Res() res: Response,
     @Req() req: Request,
@@ -53,7 +62,6 @@ export class PatientController {
   ) {
     try {
       const userId = req.user.id;
-      console.log(userId);
 
       const result: { rows: IntPatient[]; count: Number } =
         await this.patientService.getByOwner(userId);
@@ -68,6 +76,8 @@ export class PatientController {
   }
 
   @Get(':petName')
+  @Role(UserRole.owner)
+  @UseGuards(RoleGuard)
   async getDetailByOwner(
     @Req() req: Request,
     @Res() res: Response,
@@ -92,6 +102,8 @@ export class PatientController {
   }
 
   @Patch(':patientId')
+  @Role(UserRole.owner)
+  @UseGuards(RoleGuard)
   async update(
     @Body() UpdateDTO: UpdatePatientDTO,
     @Req() req: Request,
@@ -122,6 +134,8 @@ export class PatientController {
   }
 
   @Post()
+  @Role(UserRole.owner)
+  @UseGuards(RoleGuard)
   async create(
     @Body() PatientDTO: CreatePatientDTO,
     @Req() req: Request,
@@ -146,6 +160,8 @@ export class PatientController {
   }
 
   @Delete(':patientId')
+  @Role(UserRole.owner)
+  @UseGuards(RoleGuard)
   async destroy(
     @Req() req: Request,
     @Res() res: Response,
