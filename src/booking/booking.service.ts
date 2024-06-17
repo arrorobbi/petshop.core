@@ -43,10 +43,11 @@ export class BookingService {
   async statusBooking(
     oldData: Booking,
     newData: IntBooking,
+    t: any,
   ): Promise<IntBooking> {
     const updateStatus = Object.assign(oldData, newData);
-    await updateStatus.save();
+    await updateStatus.save({ transaction: t });
 
-    return await updateStatus.reload();
+    return await updateStatus.reload({ transaction: t });
   }
 }

@@ -68,7 +68,7 @@ export class GenerateService {
       console.log('Barcode image saved successfully as barcode-image.png');
     });
 
-    await this.mailService.bookingMail(
+    const mailer = await this.mailService.bookingMail(
       filename,
       payload,
       emailUser,
@@ -78,6 +78,6 @@ export class GenerateService {
 
     // sending barcode and dependancies information via email
 
-    return filename;
+    return mailer;
   }
 }

@@ -8,9 +8,8 @@ import {
   Body,
   Req,
   Param,
-  Patch,
-  Delete,
 } from '@nestjs/common';
+import * as fs from 'fs';
 import { NextFunction, Response, Request } from 'express';
 import { CreateBookingDTO, IntBooking } from 'src/validators/booking.validator';
 import { BookingService } from './booking.service';
@@ -21,6 +20,7 @@ import * as moment from 'moment';
 import { GenerateService } from 'src/misc/barcode_generator';
 import { UUID } from 'crypto';
 import { Booking } from 'src/models';
+import { Sequelize } from 'sequelize-typescript';
 
 @Controller('booking')
 export class BookingController {
@@ -29,6 +29,7 @@ export class BookingController {
     private readonly userService: UserService,
     private readonly patientService: PatientService,
     private readonly generateService: GenerateService,
+    private readonly sequelize: Sequelize,
   ) {}
 
   @Get()
@@ -47,13 +48,14 @@ export class BookingController {
     }
   }
 
-  @Post()
+  @Post() // issue on transaction cause not created but need lookup bookingId on send email
   async create(
     @Body() BookingDTO: CreateBookingDTO,
     @Req() req: Request,
     @Res() res: Response,
     @Next() next: NextFunction,
   ) {
+    let bookingId: string;
     try {
       const userId = req.user.id;
 
@@ -114,24 +116,27 @@ export class BookingController {
     @Next() next: NextFunction,
   ) {
     try {
-      const oldData: Booking = await this.bookingService.getById(bookingId);
-      const newData: IntBooking = {
-        ...oldData,
-        isScanned: status === 'scan' ? true : oldData.isScanned,
-        isDone:
-          status === 'done' && oldData.isScanned === true
-            ? true
-            : oldData.isDone,
-      };
+      await this.sequelize.transaction(async (t) => {
+        const oldData: Booking = await this.bookingService.getById(bookingId);
+        const newData: IntBooking = {
+          ...oldData,
+          isScanned: status === 'scan' ? true : oldData.isScanned,
+          isDone:
+            status === 'done' && oldData.isScanned === true
+              ? true
+              : oldData.isDone,
+        };
 
-      const result: IntBooking = await this.bookingService.statusBooking(
-        oldData,
-        newData,
-      );
-      return res.status(HttpStatus.OK).json({
-        status: HttpStatus.OK,
-        message: 'Request Success',
-        data: result,
+        const result: IntBooking = await this.bookingService.statusBooking(
+          oldData,
+          newData,
+          t,
+        );
+        return res.status(HttpStatus.OK).json({
+          status: HttpStatus.OK,
+          message: 'Request Success',
+          data: result,
+        });
       });
     } catch (error) {
       next(error);

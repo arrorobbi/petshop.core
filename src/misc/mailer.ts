@@ -105,6 +105,7 @@ export class MailService {
           },
         ],
       });
+      return info;
     } catch (error) {
       throw new BadRequestError(error);
     }
