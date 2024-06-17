@@ -35,6 +35,7 @@ import { UserRole } from 'config/enum/role.enum';
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
+  // get all patient for doctor role
   @Get()
   @Role(UserRole.doctor)
   @UseGuards(RoleGuard)
@@ -52,6 +53,7 @@ export class PatientController {
     }
   }
 
+  // get all pet order by owner id
   @Get('owner')
   @Role(UserRole.owner)
   @UseGuards(RoleGuard)
@@ -75,6 +77,7 @@ export class PatientController {
     }
   }
 
+  // get detail pet by patient name and owner id
   @Get(':petName')
   @Role(UserRole.owner)
   @UseGuards(RoleGuard)
@@ -101,6 +104,7 @@ export class PatientController {
     }
   }
 
+  // edit pet by owner
   @Patch(':patientId')
   @Role(UserRole.owner)
   @UseGuards(RoleGuard)
@@ -133,6 +137,7 @@ export class PatientController {
     }
   }
 
+  // create pet by owner
   @Post()
   @Role(UserRole.owner)
   @UseGuards(RoleGuard)
@@ -159,6 +164,7 @@ export class PatientController {
     }
   }
 
+  // delete pet by owner
   @Delete(':patientId')
   @Role(UserRole.owner)
   @UseGuards(RoleGuard)

@@ -4,53 +4,6 @@ import { Injectable } from '@nestjs/common';
 import { BookingService } from 'src/booking/booking.service';
 import { BadRequestError } from 'src/errors';
 
-// const bookingTemplate = fs.readFileSync("mailer/booking.html");
-// config nodemailer
-
-// export class MailService {
-//   constructor(private readonly bookingService: BookingService) {}
-
-//   async booking(
-//     payload: string,
-//     bookingId: string,
-//     userEmail: string,
-//     doctorName: string,
-//     userName: string,
-//   ) {
-//     try {
-//       const dataBooking = await this.bookingService.getById(bookingId);
-//       const info = await transporter.sendMail({
-//         from: 'vickyrobbi@gmail.com',
-//         to: userEmail,
-//         subject: 'Your Booking ID',
-//         html: `
-//           <p><strong>Hello ${userName}</strong> <br>Here is your Booking ID on
-//           ${dataBooking.date
-//             .toLocaleDateString('en-US', {
-//               weekday: 'short',
-//               year: 'numeric',
-//               month: 'short',
-//               day: '2-digit',
-//             })
-//             .replace(
-//               ',',
-//               '',
-//             )} and queue ${dataBooking.queueNumber} with doctor ${doctorName} :  <br></p>
-//           ${bookingId}
-//           <p>Barcode is generated in attachment and show the barcode to staff on site</p>
-//         `,
-//         attachments: [
-//           {
-//             filename: `${bookingId}.png`,
-//             path: payload,
-//           },
-//         ],
-//       });
-//     } catch (error) {
-//       throw new BadRequestError(error);
-//     }
-//   }
-// }
 @Injectable()
 export class MailService {
   private transporter: any;
@@ -77,7 +30,7 @@ export class MailService {
     userName: string,
   ) {
     try {
-      const dataBooking = await this.bookingService.getById(bookingId);
+      const dataBooking = await this.bookingService.getById(bookingId); //checking booking data
       const info = await this.transporter.sendMail({
         from: 'vickyrobbi@gmail.com',
         to: userEmail,

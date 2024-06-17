@@ -4,19 +4,22 @@ import { UserRole } from 'config/enum/role.enum';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
+  // implementing using useGuard()
   constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const roles = this.reflector.get<string[]>('roles', context.getHandler());
+    // desicion for validating
+    const roles = this.reflector.get<string[]>('roles', context.getHandler()); // get value from decoration
     if (!roles || roles.length === 0) {
-      return false; // No roles required, allow access
+      return false; // denied not declaring role
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = request.user;
-    console.log(user);
+    const request = context.switchToHttp().getRequest(); // get request
+    const user = request.user; // get user from jwt
 
     let valid: boolean = false;
+
+    // maping role input and validate to enum
     roles.map((value) =>
       user.role === UserRole[value] ? (valid = true) : valid,
     );

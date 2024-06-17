@@ -1,4 +1,4 @@
 export enum ProposeEnum {
-  PETHOTEL = 'pethotel',
-  CLINIC = 'clinic',
+  pethotel = 'pethotel',
+  clinic = 'clinic',
 }
