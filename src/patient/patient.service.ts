@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Patient } from 'src/models/patient';
-import { User } from 'src/models/user';
 import { IntPatient } from '../validators/patient.validator';
 import { UUID } from 'crypto';
+import { Patient, User } from 'src/models';
 
 @Injectable()
 export class PatientService {

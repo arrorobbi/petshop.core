@@ -6,6 +6,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { sequelizeConfig } from '../sequelize.config';
 import { PatientModule } from './patient.module';
 import { BookingModule } from './booking.module';
+import { PetHotelModule } from './pet-hotel.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { BookingModule } from './booking.module';
     UserModule,
     PatientModule,
     BookingModule,
+    PetHotelModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,5 +1,5 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
+const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class PetHotel extends Model {
     /**
@@ -20,11 +20,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       bookingId: DataTypes.UUID,
       dateOut: DataTypes.DATE,
+      qty: DataTypes.NUMBER,
     },
     {
       sequelize,
-      modelName: "PetHotel",
-    }
+      modelName: 'PetHotel',
+    },
   );
   return PetHotel;
 };

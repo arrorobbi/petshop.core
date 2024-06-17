@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("PetHotels", {
+    await queryInterface.createTable('PetHotels', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -11,12 +11,15 @@ module.exports = {
       bookingId: {
         type: Sequelize.STRING,
         references: {
-          key: "id",
-          model: "Bookings",
+          key: 'id',
+          model: 'Bookings',
         },
       },
       dateOut: {
         type: Sequelize.DATE,
+      },
+      qty: {
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +32,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("PetHotels");
+    await queryInterface.dropTable('PetHotels');
   },
 };
