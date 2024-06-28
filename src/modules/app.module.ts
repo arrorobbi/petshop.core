@@ -7,6 +7,7 @@ import { sequelizeConfig } from '../sequelize.config';
 import { PatientModule } from './patient.module';
 import { BookingModule } from './booking.module';
 import { PetHotelModule } from './pet-hotel.module';
+import { ItemModule } from './item.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { PetHotelModule } from './pet-hotel.module';
     PatientModule,
     BookingModule,
     PetHotelModule,
+    ItemModule,
   ],
   controllers: [AppController],
   providers: [AppService],

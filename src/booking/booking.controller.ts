@@ -81,13 +81,15 @@ export class BookingController {
       const random = Math.floor(Math.random() * 101);
       const bookingId = `${owner.firstName}` + `_${random}` + `${date}`;
 
+      const inputDate = BookingDTO.date;
       // formatting dateIn from req body
-      const dateFormatted = moment(BookingDTO.date).format(
-        'YYYY-MM-DD HH:mm:ss.SSS Z',
+      const dateFormatted = moment(BookingDTO.date, moment.ISO_8601).format(
+        'YYYY-MM-DD HH:mm:ss.SSS',
       );
 
-      const queueNumber: number =
-        await this.bookingService.countBooking(dateFormatted);
+      const queueNumber: number = await this.bookingService.countBooking(
+        `${dateFormatted}` + ' +07:00',
+      );
 
       const data: IntBooking = {
         ...BookingDTO,
